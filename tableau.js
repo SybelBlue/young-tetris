@@ -2,10 +2,11 @@ class Tableau {
     static colors = ["#C9A5F3", "#F87060", "#FFB400", "#42BFDD", "#A6FFA1"]
     static textSize = 30;
 
+    get position() { return [this.gridX * Grid.unit, this.gridY * Grid.unit]; }
+
     constructor(gridX, gridY, shape) {
         this.gridX = gridX;
         this.gridY = gridY;
-        this.position = [gridX * Grid.unit, gridY * Grid.unit];
         this.shape = shape;
         this.color = random(Tableau.colors);
         this.labels = this.shape
