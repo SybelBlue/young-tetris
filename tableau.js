@@ -1,12 +1,11 @@
 class Tableau {
     static colors = ["#C9A5F3", "#F87060", "#FFB400", "#42BFDD", "#A6FFA1"]
-    static gridUnit;
-    static gridPosition = [200, 500];
     static textSize = 30;
 
     constructor(gridX, gridY, shape) {
-        Tableau.gridUnit = Renderer.textWidth("0", Tableau.textSize) * 1.15;
-        this.position = [gridX * Tableau.gridUnit, gridY * Tableau.gridUnit];
+        this.gridX = gridX;
+        this.gridY = gridY;
+        this.position = [gridX * Grid.unit, gridY * Grid.unit];
         this.shape = shape;
         this.color = random(Tableau.colors);
         this.labels = this.shape
@@ -30,7 +29,6 @@ class Tableau {
 
     draw() {
         Renderer.push(this);
-        Renderer.translate(...Tableau.gridPosition);
         Renderer.translate(...this.position);
         Renderer.newRenderable(Layers.Tableau, _stubs => {
             fill(color(this.color));
@@ -38,19 +36,35 @@ class Tableau {
             vertex(0, 0);
             for (let i = 0; i < this.shape.length; i++) {
                 const len = this.shape[i];
-                vertex(len * Tableau.gridUnit, i       * Tableau.gridUnit);
-                vertex(len * Tableau.gridUnit, (i + 1) * Tableau.gridUnit);
+                vertex(len * Grid.unit, i       * Grid.unit);
+                vertex(len * Grid.unit, (i + 1) * Grid.unit);
             }
-            vertex(0, this.shape.length * Tableau.gridUnit);
+            vertex(0, this.shape.length * Grid.unit);
             endShape(CLOSE);
 
             fill("#102542");
             textSize(Tableau.textSize);
             for (let i = 0; i < this.labels.length; i++) {
-                text(this.labelStrings[i], 2, i * Tableau.gridUnit + Renderer.textHeight(Tableau.textSize) * 0.8);
+                text(this.labelStrings[i], 2, i * Grid.unit + Renderer.textHeight(Tableau.textSize) * 0.8);
             }
         });
         Renderer.pop(this);
         console.log(this.labels);
+    }
+
+    contactPoints() {
+        let points = [];
+        for (let i = 0; i < this.shape.length - 1; i++) {
+            const diff = this.shape[i] - this.shape[i + 1];
+            for (let j = 0; j < diff; j++) {
+                points.push([this.shape[i] + j - diff, i])
+            }
+        }
+
+        for (let i = 0; i < Array.last(this.shape); i++) {
+            points.push([i, this.shape.length - 1]);
+        }
+
+        return points.map(arr => [this.gridX + arr[0], this.gridY + arr[1] + 1]);
     }
 }
