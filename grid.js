@@ -9,10 +9,10 @@ class Grid {
         this.tableauxMask = Array.from({length: Grid.dimensions[1]}, () => 0);
         this.tableaux = [];
 
-        ([   new Tableau(0, 0, [4, 2, 1]),
-            new Tableau(6, 0, [4, 2, 2, 1]),
-            new Tableau(12, 0, [2, 2])
-        ]).forEach(t => this.placeTableau(t))
+        ([  new Tableau(0, 0, [4, 2, 1]),
+            new Tableau(12, 0, [2, 2]),
+            new Tableau(11, 0, [4, 2, 2, 1])
+        ]).forEach(t => this.forceDownTableau(t))
     }
 
     draw() {
@@ -37,6 +37,13 @@ class Grid {
         this.tableaux.push(tab);
     }
 
+    forceDownTableau(tab) {
+        while (!this.canPlace(tab)) {
+            tab.gridY += 1;
+        }
+        this.placeTableau(tab);
+    }
+
     viewMask() {
         this.tableauxMask.forEach((row, i) => {
             var s = "" + i;
@@ -47,6 +54,11 @@ class Grid {
                 s += " ";
             }
             console.log(s + "|");
-        })
+        });
+    }
+
+    canPlace(tab) {
+        return tab.contactPoints()
+            .some(p => p[1] >= this.tableauxMask.length || (this.tableauxMask[p[1]] & (1 << p[0])));
     }
 }
