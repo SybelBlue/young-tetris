@@ -1,10 +1,11 @@
+let grid;
+
 function setup() {
     createCanvas(windowWidth, windowHeight);
     background(240);
-
-    new Tableau(0, 0, [4, 2, 1]).draw()
-    new Tableau(6, 0, [4, 2, 2, 1]).draw()
-    new Tableau(12, 0, [2, 2]).draw()
+    grid = new Grid(500, 200);
+    
+    grid.draw();
 }
 
 function draw() {
