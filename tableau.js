@@ -12,11 +12,16 @@ class Tableau {
         this.labels = this.shape
             .reduce(
                 function(acc, size) {
-                    acc.labels.push(Array.range(size, acc.last));
+                    acc.labels.push(Array.from({ length: size }, () => {
+                        const i = random(Array.range(acc.remaining.length));
+                        const out = acc.remaining[i];
+                        acc.remaining.splice(i, 1);
+                        return out + 1;
+                    }));
                     acc.last += size;
                     return acc;
                 }, 
-                { labels: [], last: 1 }
+                { labels: [], remaining: Array.range(Array.sum(this.shape)) }
             )
             .labels;
         this.labelStrings = this.labels
