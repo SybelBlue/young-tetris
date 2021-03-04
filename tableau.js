@@ -50,7 +50,6 @@ class Tableau {
             }
         });
         Renderer.pop(this);
-        console.log(this.labels);
     }
 
     contactPoints() {
